@@ -1,0 +1,47 @@
+.admin-container{
+    background-image: url(../Assets//bible.jpg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100vh;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding-right: 1em;
+    font-family: "plus jakarta  sans";
+}
+
+.admin-subcontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.admin-header{
+    font-family: "plus jakarta sans";
+    font-size: 1.75em;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    letter-spacing: 0.15em;
+    line-height: 1.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    padding-bottom: 1em;
+}
+
+.admin-about-us{
+    padding: 15px 30px;
+    border: 1px solid white;
+    border-radius: 25px;
+    background-color: transparent;
+    color: white;
+    font-family: "plus jakarta sans";
+    font-size: 1em;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.admin-about-us:hover{
+    backdrop-filter: blur(5px);
+}

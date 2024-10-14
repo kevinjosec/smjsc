@@ -1,0 +1,51 @@
+.aboutus-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 3em;
+}
+
+.aboutus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.aboutus img {
+  height: 80vh;
+  padding: 1em;
+  border-radius: 20px;
+}
+
+.aboutus-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  font-family: "plus jakarta sans";
+  padding: 4em;
+  text-align: justify;
+}
+
+.aboutus-name {
+  font-size: 3em;
+  font-weight: 700;
+  padding-bottom: 13px;
+}
+
+.aboutus-know-more {
+  margin-top: 3em;
+  width: fit-content;
+  padding: 1em 3em;
+  border: none;
+  border-radius: 24px;
+  background-color: black;
+  &.aboutus-know-more a{
+    font-family: "plus jakarta sans";
+    font-weight: 500;
+    text-decoration: none;
+    color: white;
+  }
+  cursor: pointer;
+  transition: 0.5s;
+}

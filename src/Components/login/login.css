@@ -1,0 +1,84 @@
+.login-container {
+  background-image: url(../Assets/mary.jpg);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 100vh;
+  display: flex;
+  padding-left: 1em;
+}
+
+.login-subcontainer {
+  padding: 5em 0em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  gap: 1.5em;
+}
+
+.login-header {
+  font-family: "plus jakarta sans";
+  font-size: 1.75em;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  letter-spacing: 0.15em;
+  line-height: 1.5em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  padding-bottom: 1em;
+}
+
+.login-disclaimer {
+  font-size: 0.75em;
+  color: white;
+  font-family: "plus jakarta sans";
+  font-weight: 500;
+  color: red;
+  margin-top: 10em;
+}
+
+.login-username,
+.login-password {
+  padding: 10px 10px;
+  width: 20rem;
+  border: 1px solid white;
+  color: white;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+.login-username:focus,
+.login-password:focus {
+  border: 1.5px solid white;
+  outline: none;
+}
+
+.login-submit {
+  padding: 10px;
+  height: 3em;
+  width: 10rem;
+  border: 1px solid white;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  background-color: transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  border-radius: 25px;
+  padding: 10px 40px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.login-submit:hover {
+  background-color: black;
+  border: none;
+}
+
+.login-password::placeholder,
+.login-username::placeholder {
+  font-family: "plus jakarta sans";
+  font-weight: 300;
+  color: white;
+}

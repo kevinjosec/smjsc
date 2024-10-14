@@ -1,0 +1,85 @@
+.usernavbar-container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 100%;
+  background-color: #1d284d;
+  color: white;
+}
+
+.usernavbar-sub-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1.5em;
+  font-family: "plus jakarta sans";
+  letter-spacing: 1px;
+}
+
+.church-logo{
+  height: 3em;
+  position: absolute;
+  right: 1em;
+  top: 0.25em;
+}
+
+.sunday-school-header {
+  cursor: pointer;
+  font-size: 1.75em;
+  margin-left: 2em;
+}
+
+.sunday-school-sub-heading {
+  margin-top: 3px;
+  font-size: 12px;
+}
+
+.usernavbar-sub-container .menu-icon {
+  position: absolute;
+  top: 1.1em;
+  left: 1em;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.menu {
+  position: absolute;
+  top: 5.5em;
+  left: 1em;
+  width: 300px;
+  background-color: white;
+  color: black;
+  bottom: 1px solid black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  z-index: 1000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+}
+
+.menu li {
+  list-style: none;
+  font-family: "plus jakarta sans";
+  padding: 1.5em 0em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu li:hover {
+  font-size: 1.25em;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.sub-menu li:hover {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.menu.open {
+  transform: translateX(0);
+}
+
+.sub-menu {
+  font-size: 13px;
+  line-height: 0.25px;
+}

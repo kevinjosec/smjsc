@@ -1,0 +1,72 @@
+GET http://localhost:3000/api/faculty
+
+###
+
+GET http://localhost:3000/api/faculty/6684cf1abdaf703c5998a8e6
+
+###
+
+POST http://localhost:3000/api/faculty
+Content-Type: application/json
+
+{
+    "name": "Raju Paily",
+    "gender": "male",
+    "number": "65823077",
+    "email": "rjpaily12092004@gmail.com",
+    "branch": "Salwa",
+    "address": "Abbassiya",
+    "photo":"Raju Paily",
+    "class": "10"
+}
+
+###
+
+GET http://localhost:3000/api/committee
+
+###
+
+GET http://localhost:3000/api/committee/6684d25de268ad0c3b1bfee8
+
+###
+
+POST http://localhost:3000/api/committee
+Content-Type: application/json
+
+{
+    "name": "Kevin Jose",
+    "gender": "male",
+    "number": "7994495225",
+    "assosciation": "Mar Ignathious Youth Association",
+    "address": "Abbassiya",
+    "photo": "Kevin Jose",
+    "post": "member"
+}
+
+###
+
+GET http://localhost:3000/api/student
+
+###
+
+POST http://localhost:3000/api/student
+Content-Type: application/json
+
+{
+    "name": "Jevin Jose",
+    "gender": "male",
+    "class": 10,
+    "unit": "Salwa",
+    "number": 7994495225,
+    "email": "kevinjosecheriachery@gmail.com",
+    "fees": false,
+    "dateOfBirth": "2007-05-15",
+    "dateOfBaptism": "2007-08-20",
+    "baptismName": "Kevin",
+    "category": "Catholic",
+    "fathersName": "Jose Cherian",
+    "mothersName": "Mary Jose",
+    "homeParish": "St. Thomas Church",
+    "addressIndia": "123, Main Road, Kerala, India",
+    "addressKuwait": "456, Block 7, Salwa, Kuwait"
+}

@@ -1,0 +1,24 @@
+.navbar-container{
+    display: flex;
+    padding: 2em;
+    gap: 3em;
+}
+
+.navbar-items{
+    border: none;
+    color: white;
+    background-color: transparent;
+    font-size: 1em;
+    cursor: pointer;
+    font-family: "plus jakarta sans";
+    transition: 0.5s;
+}
+
+.navbar-items:hover{
+    font-weight: bold;
+}
+
+.navbar-items.login{
+    position: absolute;
+    right: 2em;
+}
