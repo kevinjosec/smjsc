@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import "./login.css";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../../hooks/useLogin";
 
 const Login = () => {
-
   const navigate = useNavigate();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const { login, loading, error } = useLogin();
 
-  const handleLogin = () =>{
-    navigate('/admin');
-  }
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    console.log("Email & Password", email, password);
+    const success = await login(email, password);
+
+    if(success){
+      navigate('/admin')
+    }
+    if(!success){
+      console.error("Login failed");
+    }
+  };
 
   return (
     <div className="login-container">
@@ -17,13 +30,28 @@ const Login = () => {
           ST. MARY'S <br />
           JACOBITE SYRIAN ORTHODOX CHURCH
         </div>
-        <input type="text" className="login-username" placeholder="Username" />
-        <input
-          type="password"
-          className="login-password"
-          placeholder="Password"
-        />
-        <input type="submit" className="login-submit" value="LOGIN" onClick={handleLogin}/>
+        <br />
+        <form onSubmit={handleLogin} className="loginForm">
+          <input
+            type="email"
+            className="login-username"
+            placeholder="Username"
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            className="login-password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <br />
+          <button type="submit" className="login-submit" value="LOGIN">
+            LOGIN
+          </button>
+          {error && <div className="error">{error}</div>}
+        </form>
         <p className="login-disclaimer">Only for authorized individuals</p>
       </div>
     </div>

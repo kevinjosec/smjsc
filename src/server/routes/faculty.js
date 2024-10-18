@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Teacher = require("../models/facultys");
+const requireAuth = require('../middleware/requireAuth')
+router.use(requireAuth);
 
 router.get("/", async (req, res) => {
   try {

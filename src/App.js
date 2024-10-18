@@ -22,10 +22,10 @@ function App() {
           <Route path="/" element={<Homepage />} />
           <Route path="/aboutus" element={<Aboutus />} />
           <Route path="/students" element={<Students />} />
-          <Route path="/accounts" element={<Accounts />} />
+          <Route path="/account" element={<Accounts />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/events" element={<Events />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/Login" element={<Login />} />
           <Route path="/teachers" element={<Teachers />} />
         </Routes>
       </Router>

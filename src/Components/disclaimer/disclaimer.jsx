@@ -21,7 +21,7 @@ const Disclaimer = ({ closeDisclaimer }) => {
           <button
             className="disclaimer-proceed"
             onClick={() => {
-              navigate("/login");
+              navigate("/Login");
             }}
           >
             Proceed

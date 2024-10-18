@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Committee = require("../models/committees");
+const requireAuth = require('../middleware/requireAuth')
+router.use(requireAuth);
 
 router.get("/", async (req, res) => {
   try {
@@ -43,6 +45,7 @@ router.post("/", async (req, res) => {
 });
 
 router.patch("/:id", async (req, res) => {});
+
 router.delete("/:id", async (req, res) => {});
 
 module.exports = router;

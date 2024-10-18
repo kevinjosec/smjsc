@@ -18,8 +18,10 @@ const teacherRoute = require('./routes/faculty')
 const committeeRoute = require('./routes/committee');
 const studentRoute = require('./routes/student');
 const accountsRoute = require('./routes/account');
+const userRoute = require('./routes/user');
 
 app.use('/api/faculty', teacherRoute);
 app.use('/api/committee', committeeRoute);
 app.use('/api/student', studentRoute);
 app.use('/api/accounts', accountsRoute);
+app.use('/api/user', userRoute);

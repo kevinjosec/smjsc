@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const Account = require("../models/accounts");
 
+const requireAuth = require('../middleware/requireAuth')
+router.use(requireAuth);
+
 // GET accounts by year and month
 router.get("/", async (req, res) => {
   const { year, month } = req.query;

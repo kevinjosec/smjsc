@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Student = require("../models/students");
+const requireAuth = require('../middleware/requireAuth')
+router.use(requireAuth);
 
 router.get("/", async (req, res) => {
   try {
@@ -53,7 +55,6 @@ router.post("/", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-
 
 router.patch("/:id", async (req, res) => {
   try {
