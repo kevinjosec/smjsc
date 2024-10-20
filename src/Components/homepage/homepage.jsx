@@ -10,9 +10,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
-import { IoMdPerson } from "react-icons/io";
 import { FaFacebookF } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
 import churchLogo from "../Assets/church-logo.png";
 
 delete L.Icon.Default.prototype._getIconUrl;

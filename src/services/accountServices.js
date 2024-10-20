@@ -1,12 +1,21 @@
 import axios from "axios";
-
 // Base URL for the API
 const accountURL = "http://localhost:3000/api";
+
+const getAuthToken = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  return user ? user.token : null;
+};
 
 // Get all accounts
 const getAllAccounts = async () => {
   try {
-    const res = await axios.get(`${accountURL}/accounts`);
+    const token = getAuthToken();
+    const res = await axios.get(`${accountURL}/account`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (err) {
     console.error("Error: ", err);
@@ -17,7 +26,16 @@ const getAllAccounts = async () => {
 // Get an account by year and month
 const getAccountByYearMonth = async (year, month) => {
   try {
-    const res = await axios.get(`${accountURL}/accounts/?year=${year}&month=${month}`);
+    const token = getAuthToken();
+    console.log("TOKEN : ", token);
+    const res = await axios.get(
+      `${accountURL}/account/?year=${year}&month=${month}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return res.data;
   } catch (err) {
     console.error("Error: ", err);
@@ -28,7 +46,12 @@ const getAccountByYearMonth = async (year, month) => {
 // Create a new account
 const createAccount = async (accountData) => {
   try {
-    const res = await axios.post(`${accountURL}/accounts`, accountData);
+    const token = getAuthToken();
+    const res = await axios.post(`${accountURL}/account`, accountData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (err) {
     console.error("Error: ", err);

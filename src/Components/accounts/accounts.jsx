@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./accounts.css";
 import Usernavbar from "../user-navbar/userNavbar";
 import { MdAdd } from "react-icons/md";
 import accountServices from "../../services/accountServices";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import getUserRole from "../../services/userServices";
 
 const Accounts = () => {
+  const [role, setRole] = useState();
+
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const savedMonth = localStorage.getItem("selectedMonth");
     return savedMonth || "July";
@@ -38,12 +42,14 @@ const Accounts = () => {
     generatedAt: new Date().toISOString(), // Added for tracking
   });
 
-  useEffect(() => {
-    fetchAccounts(selectedYear, selectedMonth);
-  }, [selectedYear, selectedMonth]);
+  const { user } = useAuthContext();
 
-  const fetchAccounts = async (year, month) => {
+  const fetchAccounts = useCallback(async (year, month) => {
     try {
+      const RES = await getUserRole();
+      setRole(RES);
+      console.log("ROLE : ", role);
+
       const accountData = await accountServices.getAccountByYearMonth(
         year,
         month
@@ -62,7 +68,13 @@ const Accounts = () => {
       console.error("Error fetching accounts: ", err);
       setAccounts({ income: [], expense: [] });
     }
-  };
+  }, [role]);
+
+  useEffect(() => {
+    if (user) {
+      fetchAccounts(selectedYear, selectedMonth);
+    }
+  }, [fetchAccounts, selectedYear, selectedMonth, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -198,11 +210,19 @@ const Accounts = () => {
       <Usernavbar />
       <div className="money">
         <div className="net-income">
-          <h2>{netIncome.toFixed(2)} KWD</h2>
+          {role === "headmaster" ? (
+            <h2>{netIncome.toFixed(2)} KWD</h2>
+          ) : (
+            <h2>XXX KWD</h2>
+          )}
           <p>Net Income</p>
         </div>
         <div className="balance-amount">
-          <h2>{balanceAmount.toFixed(2)} KWD</h2>
+          {role === "headmaster" ? (
+            <h2>{balanceAmount.toFixed(2)} KWD</h2>
+          ) : (
+            <h2>XXX KWD</h2>
+          )}
           <p>Balance Amount</p>
         </div>
         <div className="month-selector">
@@ -244,16 +264,18 @@ const Accounts = () => {
       </div>
       <div className="income">
         <h2 className="income-heading">Income</h2>
-        <button
-          className={`add-income-button ${
-            !isCurrentOrFutureMonthYear() ? "disabled" : ""
-          }`}
-          onClick={handleAddIncomeClick}
-          disabled={!isCurrentOrFutureMonthYear()}
-        >
-          <MdAdd style={{ fontSize: "1.5em" }} />
-          Add an Income
-        </button>
+        {role === "headmaster" && (
+          <button
+            className={`add-income-button ${
+              !isCurrentOrFutureMonthYear() ? "disabled" : ""
+            }`}
+            onClick={handleAddIncomeClick}
+            disabled={!isCurrentOrFutureMonthYear()}
+          >
+            <MdAdd style={{ fontSize: "1.5em" }} />
+            Add an Income
+          </button>
+        )}
         <div className="income-list">
           {accounts.income.length > 0 ? (
             accounts.income.map((inc, index) => (
@@ -265,7 +287,11 @@ const Accounts = () => {
                     year: "numeric",
                   })}
                 </p>
-                <p data-label="Amount">{inc.amount} KWD</p>
+                {role === "headmaster" ? (
+                  <p data-label="Amount">{inc.amount} KWD</p>
+                ) : (
+                  <p data-label="Amount">XXX KWD</p>
+                )}
                 <p data-label="Description">{inc.description}</p>
                 <p data-label="Source">{inc.source}</p>
                 <p data-label="Received By">{inc.receivedBy}</p>
@@ -283,16 +309,18 @@ const Accounts = () => {
 
       <div className="expense">
         <h2 className="expense-heading">Expenses</h2>
-        <button
-          className={`add-expense-button ${
-            !isCurrentOrFutureMonthYear() ? "disabled" : ""
-          }`}
-          onClick={handleAddExpenseClick}
-          disabled={!isCurrentOrFutureMonthYear()}
-        >
-          <MdAdd style={{ fontSize: "1.5em" }} />
-          Add an Expense
-        </button>
+        {role === "headmaster" && (
+          <button
+            className={`add-expense-button ${
+              !isCurrentOrFutureMonthYear() ? "disabled" : ""
+            }`}
+            onClick={handleAddExpenseClick}
+            disabled={!isCurrentOrFutureMonthYear()}
+          >
+            <MdAdd style={{ fontSize: "1.5em" }} />
+            Add an Expense
+          </button>
+        )}
         <div className="expense-list">
           {accounts.expense.length > 0 ? (
             accounts.expense.map((exp, index) => (
@@ -304,7 +332,11 @@ const Accounts = () => {
                     year: "numeric",
                   })}
                 </p>
-                <p data-label="Amount">{exp.amount} KWD</p>
+                {role === "headmaster" ? (
+                  <p data-label="Amount">{exp.amount} KWD</p>
+                ) : (
+                  <p data-label="Amount">XXX KWD</p>
+                )}
                 <p data-label="Description">{exp.description}</p>
                 <p data-label="Spent On">{exp.spentOn}</p>
                 <p data-label="Spent By">{exp.spentBy}</p>

@@ -4,8 +4,11 @@ import "./students.css";
 import Usernavbar from "../user-navbar/userNavbar";
 import studentServices from "../../services/studentServices";
 import { MdDeleteOutline, MdAdd } from "react-icons/md";
+import getUserRole from "../../services/userServices";
+
 
 const Students = () => {
+  const [role, setRole] = useState();
   // State variables
   const [students, setStudents] = useState([]);
   const [error, setError] = useState(null);
@@ -50,10 +53,7 @@ const Students = () => {
     const monthDiff = today.getMonth() - dob.getMonth();
 
     // Adjust age if current month and day are before the birth month and day
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < dob.getDate())
-    ) {
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
       age--;
     }
 
@@ -71,6 +71,9 @@ const Students = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        const RES = await getUserRole();
+        console.log("RES : ", RES);
+        setRole(RES);
         const allStudents = await studentServices.getAllStudents();
         const unitFilterLower = unitFilter.toLowerCase();
         const filteredByUnit = allStudents.filter(
@@ -346,12 +349,14 @@ const Students = () => {
               <div className="class-heading-container">
                 <h3 className="class-heading">
                   Class {classNum} ({sortedStudents.length})
-                  <button
-                    className="add-student-button"
-                    onClick={() => handleAddStudentClick()}
-                  >
-                    <MdAdd style={{ fontSize: "1.5em" }} /> <p>Add Student</p>
-                  </button>
+                  {role === 'headmaster'&& (
+                    <button
+                      className="add-student-button"
+                      onClick={() => handleAddStudentClick()}
+                    >
+                      <MdAdd style={{ fontSize: "1.5em" }} /> <p>Add Student</p>
+                    </button>
+                   )}
                 </h3>
               </div>
               <div className="student-details title-bar">
@@ -370,9 +375,14 @@ const Students = () => {
                   <div className={`fees ${student.fees ? "paid" : "not-paid"}`}>
                     {student.fees ? "Paid" : "Pending"}
                   </div>
-                  <div className="edit" onClick={() => handleEditClick(student)}>
+                  { role === 'headmaster' && (
+                  <div
+                    className="edit"
+                    onClick={() => handleEditClick(student)}
+                  >
                     Edit
                   </div>
+                  )}<br/>
                   <div className="class">Class {student.class}</div>
                 </div>
               ))}
@@ -380,7 +390,9 @@ const Students = () => {
           );
         })
       ) : (
-        <div className="no-students">No students found in the selected category</div>
+        <div className="no-students">
+          No students found in the selected category
+        </div>
       )}
 
       {/* Edit Modal */}

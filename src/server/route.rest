@@ -74,11 +74,15 @@ Content-Type: application/json
 ###
 
 
-POST http://localhost:3000/api/user/login
+POST http://localhost:3000/api/user/signup
 Content-Type: application/json
 
 {
-    "email" : "kevinjosecheriachery@gmail.com",
-    "password" : "Kevin1303!"
+    "email" : "jose@gmail.com",
+    "password" : "Kevin1303!",
+    "role" : "vicar"
 }
 
+###
+
+GET http://localhost:3000/api/user/ckjose@gmail.com

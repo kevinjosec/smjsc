@@ -8,20 +8,18 @@ mongoose.connect(process.env.DATABASE_URL);
 const db = mongoose.connection;
 
 db.on('error', (err) => console.error(err));
-db.once('open', () => console.log('MongoDB connection succcessful'));
-app.listen(3000,() => console.log('Server has started'));
+db.once('open', () => console.log('Database connected'));
+app.listen(3000,() => console.log('Server listening on port 3000'));
 
 app.use(cors());
 app.use(express.json())
 
 const teacherRoute = require('./routes/faculty')
-const committeeRoute = require('./routes/committee');
-const studentRoute = require('./routes/student');
+const studentRoute = require('./routes/student')
 const accountsRoute = require('./routes/account');
 const userRoute = require('./routes/user');
 
 app.use('/api/faculty', teacherRoute);
-app.use('/api/committee', committeeRoute);
 app.use('/api/student', studentRoute);
-app.use('/api/accounts', accountsRoute);
+app.use('/api/account', accountsRoute);
 app.use('/api/user', userRoute);

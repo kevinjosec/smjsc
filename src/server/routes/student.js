@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Student = require("../models/students");
+const authorizeAdmin  = require("../middleware/roleAuth")
+
 const requireAuth = require('../middleware/requireAuth')
 router.use(requireAuth);
 
@@ -25,7 +27,7 @@ router.get("/:id", async (req, res) => {
   } catch (err) {}
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authorizeAdmin,async (req, res) => {
   // Create a new student instance with the provided data
   const student = new Student({
     name: req.body.name,
@@ -56,7 +58,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/:id", authorizeAdmin,async (req, res) => {
   try {
     const updatedStudent = await Student.findByIdAndUpdate(
       req.params.id,
@@ -72,7 +74,7 @@ router.patch("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorizeAdmin,async (req, res) => {
   const id = req.params.id;
   try {
     const deletedStudent = await Student.findByIdAndDelete(id);

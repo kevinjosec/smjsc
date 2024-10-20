@@ -79,22 +79,27 @@
   padding: 10px 40px;
   font-weight: bold;
   text-transform: uppercase;
+  font-family: "poppins", sans-serif;
+  font-size: 1em;
+  transition: 0.5s;
 }
 
 .login-submit:hover {
-  background-color: black;
-  border: none;
+  backdrop-filter: blur(25px);
+  height: 3.5em;
+  width: 10.5em;
 }
 
 .login-password::placeholder,
 .login-username::placeholder {
-  font-family: "plus jakarta sans";
-  font-weight: 300;
+  font-family: "poppins", sans-serif;
+  font-weight: 400;
   color: white;
 }
 
 .error{
   font-family: "Poppins", sans-serif;
   font-size: 12px;
+  font-weight: 500;
   color: red;
 }
