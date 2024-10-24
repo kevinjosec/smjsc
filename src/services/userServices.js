@@ -1,6 +1,7 @@
 import axios from "axios";
+import { REACT_APP_SERVER_URL } from "../server/config";
 
-const userURL = "http://localhost:3000/api";
+const userURL = `${REACT_APP_SERVER_URL}`;
 
 // Helper function to get the authentication token and email
 const getAuth = () => {

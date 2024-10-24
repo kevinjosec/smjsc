@@ -1,0 +1,1 @@
+export const REACT_APP_SERVER_URL=" https://d84978939aa10abc37c549f928d5a505.serveo.net/api"

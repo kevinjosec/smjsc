@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
   } catch (err) {}
 });
 
-router.post("/", authorizeAdmin,async (req, res) => {
+router.post("/", authorizeAdmin, async (req, res) => {
   // Create a new student instance with the provided data
   const student = new Student({
     name: req.body.name,

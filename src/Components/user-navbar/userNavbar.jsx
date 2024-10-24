@@ -27,7 +27,7 @@ const UserNavbar = () => {
   };
 
   const handleUnitSelection = (unit) => {
-    navigate(`/students?unit=${unit}`);
+    navigate(`/student?unit=${unit}`);
   };
 
   const handleLogout = () => {

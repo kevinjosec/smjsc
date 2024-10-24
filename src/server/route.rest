@@ -49,7 +49,7 @@ GET http://localhost:3000/api/student
 
 ###
 
-POST http://localhost:3000/api/student
+POST https://0ceb26c29a60df1344e3a91b07e586ee.serveo.net/api/student
 Content-Type: application/json
 
 {
@@ -86,3 +86,14 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3000/api/user/ckjose@gmail.com
+
+
+###
+POST https://0ceb26c29a60df1344e3a91b07e586ee.serveo.net/api/user/signup
+Content-Type: application/json
+
+{
+  "email": "vicar@smjsc.org",
+  "password": "Vicar2024!",
+  "role": "vicar"
+}

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { REACT_APP_SERVER_URL } from "../server/config";
 
-const studentURL = "http://localhost:3000/api";
+const studentURL = `${REACT_APP_SERVER_URL}`;
 const getAuthToken = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   return user ? user.token : null;
@@ -9,6 +10,7 @@ const getAuthToken = () => {
 const getAllStudents = async () => {
   try {
     const token = getAuthToken();
+    console.log("Token: ", token);
     const res = await axios.get(`${studentURL}/student`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -55,12 +57,17 @@ const deleteStudent = async (id) => {
 // Create a new student
 const createStudent = async (studentData) => {
   try {
+    console.log("HERE 1:");
     const token = getAuthToken();
+    console.log("TOKEN : ", token);
     const res = await axios.post(`${studentURL}/student`, studentData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("HERE 2:");
+    console.log("RES : ", res);
+    console.log("RES 2 : ", res.data);
     return res.data;
   } catch (err) {
     console.error("Error: ", err);

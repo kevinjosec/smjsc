@@ -1,10 +1,19 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
 
 .header {
-  display: flex;
-  justify-content: left; /* Align items with space between them */
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  justify-content: center;
   align-items: center;
-  width: 100%;
+  gap: 1em;
+  padding-right: 1.5em;
+}
+
+.filter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
 }
 
 .unit-name {
@@ -13,37 +22,43 @@
   padding-left: 1em;
 }
 
-.unit-details {
-  display: flex;
-  padding-right: 1em;
-  gap: 1em;
-  text-align: left;
-  line-height: 15px;
-}
-
 .unit-count {
   display: flex;
   font-size: 0.5em;
   color: gray;
 }
 
-.search-input {
-  border: 1px solid black;
-  border-radius: 7px;
-  padding: 10px 25px;
-  margin-right: 10px;
-  font-size: 1em;
-  position: absolute;
-  right: 1em;
-}
-
 .category-filter{
-  padding: 10px 10px;
-  font-size: 1em;
-  margin-left: 29em;
+  padding: 15px 10px;
+  font-size: 14px;
   cursor: pointer;
   border: 1px solid gray ;
   border-radius: 7px;
+  width: 140px;
+}
+
+.search-input {
+  border: 1px solid black;
+  border-radius: 7px;
+  font-size: 14px;
+  width: 150px;
+  height: 40px;
+  padding:4px 20px;
+}
+
+.add-student-button {
+  width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "plus jakarta sans";
+  font-weight: bold;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 1px 15px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 .no-students{
@@ -237,20 +252,6 @@
 .delete-icon:hover {
   color: #ff0000;
   transform: scale(1.2);
-}
-
-.add-student-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "plus jakarta sans";
-  font-weight: bold;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  padding: 1px 15px;
-  cursor: pointer;
-  border-radius: 5px;
 }
 
 .add-student-button:hover {

@@ -1,6 +1,7 @@
 import axios from "axios";
+import { REACT_APP_SERVER_URL } from "../server/config";
 // Base URL for the API
-const accountURL = "http://localhost:3000/api";
+const accountURL = `${REACT_APP_SERVER_URL}`;
 
 const getAuthToken = () => {
   const user = JSON.parse(localStorage.getItem("user"));

@@ -11,7 +11,9 @@ db.on('error', (err) => console.error(err));
 db.once('open', () => console.log('Database connected'));
 app.listen(3000,() => console.log('Server listening on port 3000'));
 
-app.use(cors());
+app.use(cors({
+    origin: '*' // Frontend Serveo URL
+}));
 app.use(express.json())
 
 const teacherRoute = require('./routes/faculty')

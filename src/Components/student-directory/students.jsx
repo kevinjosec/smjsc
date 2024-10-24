@@ -6,7 +6,6 @@ import studentServices from "../../services/studentServices";
 import { MdDeleteOutline, MdAdd } from "react-icons/md";
 import getUserRole from "../../services/userServices";
 
-
 const Students = () => {
   const [role, setRole] = useState();
   // State variables
@@ -26,6 +25,15 @@ const Students = () => {
     number: "",
     email: "",
     fees: false,
+    dateOfBirth: "",
+    dateOfBaptism: "",
+    baptismName: "",
+    category: "", // Reset to empty after adding
+    fathersName: "",
+    mothersName: "",
+    homeParish: "",
+    addressIndia: "",
+    addressKuwait: "",
   });
   const [searchQuery, setSearchQuery] = useState(""); // Existing state for search query
   const [categoryFilter, setCategoryFilter] = useState(""); // New state for category filter
@@ -270,25 +278,37 @@ const Students = () => {
     e.preventDefault();
     try {
       const addedStudent = await studentServices.createStudent(newStudent);
-      // Assign category to the newly added student
-      const studentWithCategory = {
-        ...addedStudent,
-        category: calculateCategory(addedStudent.dateOfBirth),
-      };
-      setStudents([...students, studentWithCategory]);
+
+      // Calculate category based on the date of birth
+      const category = calculateCategory(addedStudent.dateOfBirth);
+
+      // Update the state with the correct category
+      setStudents((prevStudents) => [
+        ...prevStudents,
+        { ...addedStudent, category }, // Use the calculated category
+      ]);
+
       setShowAddStudentForm(false);
       setNewStudent({
         name: "",
         gender: "",
         class: "",
-        unit: unitFilter, // Use the current unit filter
+        unit: unitFilter,
         number: "",
         email: "",
         fees: false,
+        dateOfBirth: "",
+        dateOfBaptism: "",
+        baptismName: "",
+        category: category, // Reset to empty after adding
+        fathersName: "",
+        mothersName: "",
+        homeParish: "",
+        addressIndia: "",
+        addressKuwait: "",
       });
 
-      // Debugging: Log added student
-      console.log("Added Student:", studentWithCategory);
+      console.log("Added Student:", { ...addedStudent, category });
     } catch (e) {
       setError(e.message);
       console.error("Error adding student:", e);
@@ -303,35 +323,46 @@ const Students = () => {
   return (
     <div className="students-container">
       <Usernavbar />
+
       <div className="header">
         <h2 className="unit-name">
           {unitFilter} Sunday School{" "}
           <div className="unit-count">({totalStudentsInUnit} students)</div>{" "}
         </h2>
-        <div className="filters">
-          {/* Category Filter */}
-          <select
-            value={categoryFilter}
-            onChange={handleCategoryFilterChange}
-            className="category-filter"
-          >
-            <option value="">All Categories</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+        <div/>
+        <div/>
+        <div className="filter">
           {/* Search Input */}
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchQuery}
-            onChange={handleSearch}
-            className="search-input"
-          />
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchQuery}
+          onChange={handleSearch}
+          className="search-input"
+        />
+        {/* Category Filter */}
+        <select
+          value={categoryFilter}
+          onChange={handleCategoryFilterChange}
+          className="category-filter"
+        >
+          <option value="">All Categories</option>
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+
+        {role === "headmaster" && (
+          <button
+            className="add-student-button"
+            onClick={() => handleAddStudentClick()}
+          >
+           <MdAdd style={{ fontSize: "1.5em" }} />  <p>Add Student</p> 
+          </button>
+        )}
         </div>
-        <div className="unit-details"></div>
       </div>
 
       <div className="controls"></div>
@@ -349,14 +380,6 @@ const Students = () => {
               <div className="class-heading-container">
                 <h3 className="class-heading">
                   Class {classNum} ({sortedStudents.length})
-                  {role === 'headmaster'&& (
-                    <button
-                      className="add-student-button"
-                      onClick={() => handleAddStudentClick()}
-                    >
-                      <MdAdd style={{ fontSize: "1.5em" }} /> <p>Add Student</p>
-                    </button>
-                   )}
                 </h3>
               </div>
               <div className="student-details title-bar">
@@ -375,14 +398,14 @@ const Students = () => {
                   <div className={`fees ${student.fees ? "paid" : "not-paid"}`}>
                     {student.fees ? "Paid" : "Pending"}
                   </div>
-                  { role === 'headmaster' && (
-                  <div
-                    className="edit"
-                    onClick={() => handleEditClick(student)}
-                  >
-                    Edit
-                  </div>
-                  )}<br/>
+                  {role === "headmaster" && (
+                    <div
+                      className="edit"
+                      onClick={() => handleEditClick(student)}
+                    >
+                      Edit
+                    </div>
+                  )}
                   <div className="class">Class {student.class}</div>
                 </div>
               ))}
@@ -599,6 +622,8 @@ const Students = () => {
                   value={newStudent.name}
                   onChange={handleAddStudentChange}
                   required
+                  pattern="^[A-Za-z\s]+$" // Allows only alphabets and spaces
+                  title="Name should contain only letters"
                 />
               </label>
               <label>
@@ -620,11 +645,14 @@ const Students = () => {
               <label>
                 Class
                 <input
-                  type="text"
+                  type="number"
                   name="class"
                   value={newStudent.class}
                   onChange={handleAddStudentChange}
                   required
+                  min="1"
+                  max="12" // Restrict class value to be less than or equal to 12
+                  title="Class should be a number between 1 and 12"
                 />
               </label>
               <label>
@@ -640,11 +668,13 @@ const Students = () => {
               <label>
                 Number
                 <input
-                  type="text"
+                  type="number"
                   name="number"
                   value={newStudent.number}
                   onChange={handleAddStudentChange}
                   required
+                  pattern="\d{8}" // Restrict to exactly 8 digits
+                  title="Number must be exactly 8 digits"
                 />
               </label>
               <label>
@@ -681,6 +711,7 @@ const Students = () => {
                       : ""
                   }
                   onChange={handleAddStudentChange}
+                  required
                 />
               </label>
               <label>
@@ -694,6 +725,7 @@ const Students = () => {
                       : ""
                   }
                   onChange={handleAddStudentChange}
+                  required
                 />
               </label>
               <label>
@@ -703,15 +735,9 @@ const Students = () => {
                   name="baptismName"
                   value={newStudent.baptismName}
                   onChange={handleAddStudentChange}
-                />
-              </label>
-              <label>
-                Category
-                <input
-                  type="text"
-                  name="category"
-                  value={newStudent.category}
-                  readOnly
+                  required
+                  pattern="^[A-Za-z\s]+$" // Allows only alphabets and spaces
+                  title="Baptism name should contain only letters"
                 />
               </label>
               <label>
@@ -721,6 +747,9 @@ const Students = () => {
                   name="fathersName"
                   value={newStudent.fathersName}
                   onChange={handleAddStudentChange}
+                  required
+                  pattern="^[A-Za-z\s]+$" // Allows only alphabets and spaces
+                  title="Father's name should contain only letters"
                 />
               </label>
               <label>
@@ -730,6 +759,9 @@ const Students = () => {
                   name="mothersName"
                   value={newStudent.mothersName}
                   onChange={handleAddStudentChange}
+                  required
+                  pattern="^[A-Za-z\s]+$" // Allows only alphabets and spaces
+                  title="Mother's name should contain only letters"
                 />
               </label>
               <label>
@@ -739,6 +771,7 @@ const Students = () => {
                   name="homeParish"
                   value={newStudent.homeParish}
                   onChange={handleAddStudentChange}
+                  required
                 />
               </label>
               <label>
@@ -748,6 +781,7 @@ const Students = () => {
                   name="addressIndia"
                   value={newStudent.addressIndia}
                   onChange={handleAddStudentChange}
+                  required
                 />
               </label>
               <label>
@@ -757,6 +791,7 @@ const Students = () => {
                   name="addressKuwait"
                   value={newStudent.addressKuwait}
                   onChange={handleAddStudentChange}
+                  required
                 />
               </label>
               <div className="form-buttons">
