@@ -2,8 +2,18 @@ const express = require("express");
 const router = express.Router();
 const Account = require("../models/accounts");
 
-const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require("../middleware/requireAuth");
 router.use(requireAuth);
+
+// GET all accounts
+router.get("/all", async (req, res) => {
+  try {
+    const accounts = await Account.find(); // Fetch all accounts from the database
+    res.json(accounts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // GET accounts by year and month
 router.get("/", async (req, res) => {

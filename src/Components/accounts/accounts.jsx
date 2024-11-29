@@ -5,10 +5,66 @@ import { MdAdd } from "react-icons/md";
 import accountServices from "../../services/accountServices";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import getUserRole from "../../services/userServices";
+import { Line } from "react-chartjs-2";
+import { plugins } from "chart.js";
+import {
+  Chart,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+// Register the components you need
+Chart.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const Accounts = () => {
   const [role, setRole] = useState();
-
+  const options = {
+    responsive: true,
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "Date",
+        },
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: "Amount (KWD)",
+        },
+        grid: {
+          display: false,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        labels: {
+          color: "black",
+        },
+      },
+    },
+  };
+  const [lineChartData, setLineChartData] = useState({
+    labels: [],
+    datasets: [],
+  });
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const savedMonth = localStorage.getItem("selectedMonth");
     return savedMonth || "July";
@@ -17,7 +73,6 @@ const Accounts = () => {
     const savedYear = localStorage.getItem("selectedYear");
     return savedYear ? parseInt(savedYear, 10) : new Date().getFullYear();
   });
-
   const [showAddIncomeModal, setShowAddIncomeModal] = useState(false);
   const [showAddExpenseModal, setShowAddExpenseModal] = useState(false);
   const [accounts, setAccounts] = useState({ income: [], expense: [] });
@@ -44,31 +99,114 @@ const Accounts = () => {
 
   const { user } = useAuthContext();
 
-  const fetchAccounts = useCallback(async (year, month) => {
-    try {
-      const RES = await getUserRole();
-      setRole(RES);
-      console.log("ROLE : ", role);
+  const fetchAccounts = useCallback(
+    async (year, month) => {
+      try {
+        const RES = await getUserRole();
+        setRole(RES);
 
-      const accountData = await accountServices.getAccountByYearMonth(
-        year,
-        month
-      );
+        const accountData = await accountServices.getAccountByYearMonth(
+          year,
+          month
+        );
 
-      if (accountData && typeof accountData === "object") {
-        setAccounts({
-          income: accountData.income || [],
-          expense: accountData.expense || [],
-        });
-      } else {
-        console.error("Unexpected data structure:", accountData);
+        if (accountData && typeof accountData === "object") {
+          const income = accountData.income || [];
+          const expense = accountData.expense || [];
+          setAccounts({ income, expense });
+
+          // Chart data
+          try {
+            const chartStartDate = new Date("2024-10-01");
+            const chartEndDate = new Date();
+
+            const year = chartStartDate.getFullYear(); // Get the year from the start date
+            const month = chartStartDate.toLocaleString("default", {
+              month: "long",
+            });
+
+            const chartData = await accountServices.getAllAccounts(year, month);
+
+            const incomeMap = {};
+            const expenseMap = {};
+
+            // Accumulate income and expenses
+            chartData.forEach((account) => {
+              if (account.income) {
+                account.income.forEach((income) => {
+                  const dateKey = new Date(income.date).toLocaleDateString(
+                    "en-US"
+                  );
+                  incomeMap[dateKey] =
+                    (incomeMap[dateKey] || 0) + income.amount; // Accumulate income by date
+                });
+              }
+
+              if (account.expense) {
+                account.expense.forEach((expense) => {
+                  const dateKey = new Date(expense.date).toLocaleDateString(
+                    "en-US"
+                  );
+                  expenseMap[dateKey] =
+                    (expenseMap[dateKey] || 0) + expense.amount; // Accumulate expenses by date
+                });
+              }
+            });
+
+            // Generate all dates between chartStartDate and chartEndDate
+            const allDates = [];
+            const currentDate = new Date(chartStartDate);
+            while (currentDate <= chartEndDate) {
+              allDates.push(new Date(currentDate).toLocaleDateString("en-US"));
+              currentDate.setDate(currentDate.getDate() + 1); // Increment the date
+            }
+
+            // Create the labels and corresponding income and expense data
+            const labels = allDates.sort((a, b) => new Date(a) - new Date(b));
+            const chartIncomeData = labels.map(
+              (label) => incomeMap[label] || 0
+            );
+            const chartExpenseData = labels.map(
+              (label) => expenseMap[label] || 0
+            );
+
+            setLineChartData({
+              labels: labels,
+              datasets: [
+                {
+                  label: "Income",
+                  data: chartIncomeData,
+                  fill: false,
+                  borderColor: "#4caf50",
+                  tension: 0.2,
+                  borderWidth: 4,
+                },
+                {
+                  label: "Expense",
+                  data: chartExpenseData,
+                  fill: false,
+                  borderColor: "red",
+                  tension: 0.2,
+                  borderWidth: 4,
+                },
+              ],
+            });
+          } catch (error) {
+            console.error("Error fetching chart data:", error);
+            setLineChartData({ labels: [], datasets: [] }); // Reset chart data on error
+          }
+        } else {
+          console.error("Unexpected data structure:", accountData);
+          setAccounts({ income: [], expense: [] });
+          setLineChartData({ labels: [], datasets: [] }); // Reset chart data on error
+        }
+      } catch (err) {
+        console.error("Error fetching accounts: ", err);
         setAccounts({ income: [], expense: [] });
       }
-    } catch (err) {
-      console.error("Error fetching accounts: ", err);
-      setAccounts({ income: [], expense: [] });
-    }
-  }, [role]);
+    },
+    [role]
+  );
 
   useEffect(() => {
     if (user) {
@@ -180,19 +318,15 @@ const Accounts = () => {
   };
 
   const formatDateString = (dateString) => {
-    if (!dateString) return "No date provided";
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Invalid date";
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-      timeZoneName: "short",
-    };
-    return date.toLocaleString("en-US", options);
+    if (isNaN(date)) {
+      console.error("Invalid date format:", dateString);
+      return "Invalid date"; // Return a fallback if the date is invalid
+    }
+
+    // Format the date to a readable format, e.g., "dd-mm-yyyy"
+    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    return date.toLocaleDateString("en-GB", options); // 'en-GB' gives dd-mm-yyyy format
   };
 
   const netIncome = accounts.income.reduce(
@@ -208,58 +342,63 @@ const Accounts = () => {
   return (
     <div className="accounts-container">
       <Usernavbar />
-      <div className="money">
-        <div className="net-income">
-          {role === "headmaster" ? (
-            <h2>{netIncome.toFixed(2)} KWD</h2>
-          ) : (
-            <h2>XXX KWD</h2>
-          )}
-          <p>Net Income</p>
+      <div className="moneynchart">
+        <div className="money">
+          <div className="net-income">
+            {role === "headmaster" ? (
+              <h2>{netIncome.toFixed(2)} KWD</h2>
+            ) : (
+              <h2>XXX KWD</h2>
+            )}
+            <p>Net Income</p>
+          </div>
+          <div className="balance-amount">
+            {role === "headmaster" ? (
+              <h2>{balanceAmount.toFixed(2)} KWD</h2>
+            ) : (
+              <h2>XXX KWD</h2>
+            )}
+            <p>Balance Amount</p>
+          </div>
+          <div className="month-selector">
+            <select
+              name="month"
+              id="month"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+            >
+              <option value="January">January</option>
+              <option value="February">February</option>
+              <option value="March">March</option>
+              <option value="April">April</option>
+              <option value="May">May</option>
+              <option value="June">June</option>
+              <option value="July">July</option>
+              <option value="August">August</option>
+              <option value="September">September</option>
+              <option value="October">October</option>
+              <option value="November">November</option>
+              <option value="December">December</option>
+            </select>
+            <select
+              name="year"
+              id="year"
+              value={selectedYear}
+              onChange={handleYearChange}
+            >
+              {[...Array(15).keys()].map((n) => {
+                const year = new Date().getFullYear() - n;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
         </div>
-        <div className="balance-amount">
-          {role === "headmaster" ? (
-            <h2>{balanceAmount.toFixed(2)} KWD</h2>
-          ) : (
-            <h2>XXX KWD</h2>
-          )}
-          <p>Balance Amount</p>
-        </div>
-        <div className="month-selector">
-          <select
-            name="month"
-            id="month"
-            value={selectedMonth}
-            onChange={handleMonthChange}
-          >
-            <option value="January">January</option>
-            <option value="February">February</option>
-            <option value="March">March</option>
-            <option value="April">April</option>
-            <option value="May">May</option>
-            <option value="June">June</option>
-            <option value="July">July</option>
-            <option value="August">August</option>
-            <option value="September">September</option>
-            <option value="October">October</option>
-            <option value="November">November</option>
-            <option value="December">December</option>
-          </select>
-          <select
-            name="year"
-            id="year"
-            value={selectedYear}
-            onChange={handleYearChange}
-          >
-            {[...Array(15).keys()].map((n) => {
-              const year = new Date().getFullYear() - n;
-              return (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              );
-            })}
-          </select>
+        <div className="chart-container">
+          <Line options={options} data={lineChartData} />
         </div>
       </div>
       <div className="income">

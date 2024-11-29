@@ -11,8 +11,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    console.log("Email & Password", email, password);
+    
     const success = await login(email, password);
 
     if(success){

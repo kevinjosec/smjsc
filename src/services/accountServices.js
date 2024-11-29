@@ -12,7 +12,7 @@ const getAuthToken = () => {
 const getAllAccounts = async () => {
   try {
     const token = getAuthToken();
-    const res = await axios.get(`${accountURL}/account`, {
+    const res = await axios.get(`${accountURL}/account/all`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

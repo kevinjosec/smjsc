@@ -18,15 +18,13 @@ const getUserRole = async () => {
     }
     const token = authData.token;
     const email = authData.email;
-    // Make the API request to fetch the user role
     const res = await axios.get(`${userURL}/user/${email}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return res.data.role; // Return the user's role
+    return res.data.role; 
   } catch (e) {
-    // Improved error handling to log the actual error
     console.error(
       "Error fetching user role:",
       e.response ? e.response.data : e.message

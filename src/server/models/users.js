@@ -15,12 +15,12 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['headmaster', 'teacher', 'vicar'],
-    default: 'teacher'
-  }
+    enum: ["headmaster", "teacher", "vicar"],
+    default: "teacher",
+  },
 });
 
-userSchema.statics.signup = async function (email, password, role ) {
+userSchema.statics.signup = async function (email, password, role) {
   if (!email || !password) {
     throw Error("Please enter all the fields");
   }

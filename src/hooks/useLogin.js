@@ -16,10 +16,9 @@ export const useLogin = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    const text = await response.text(); // Get response as text for debugging
-    console.log(text); // Log response text
-    
-    const json = JSON.parse(text); // Parse it manually after logging
+    const text = await response.text();
+
+    const json = JSON.parse(text);
 
     if (!response.ok) {
       setError(json.error || "Login failed");
